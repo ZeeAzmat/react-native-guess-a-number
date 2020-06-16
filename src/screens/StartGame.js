@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Card from '../components/Card';
 import Input from '../components/Input';
+import NumberContainer from '../components/NumberContainer';
 import { View, Text, StyleSheet, Button, Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 
-const StartGame = () => {
+const StartGame = ({ onStartGame }) => {
   const [enteredValue, setEnteredValue] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState('');
@@ -27,8 +28,20 @@ const StartGame = () => {
 
     setConfirmed(true);
     setEnteredValue('');
-    setSelectedNumber(choosenNumber);
+    setSelectedNumber(choosenNumber < 9 ? '0' + choosenNumber : choosenNumber);
   };
+
+  let confirmedOutput;
+
+  if (confirmed) {
+    confirmedOutput = (
+      <Card style={styles.summaryContainer}>
+        <Text>You selected</Text>
+        <NumberContainer>{selectedNumber}</NumberContainer>
+        <Button title="Start Game" onPress={() => onStartGame(selectedNumber)} />
+      </Card>
+    );
+  }
 
   return (
     <TouchableWithoutFeedback onPress={() => {
@@ -61,7 +74,9 @@ const StartGame = () => {
             </View>
           </View>
         </Card>
+        {confirmedOutput}
       </View>
+
     </TouchableWithoutFeedback>
   );
 }
@@ -95,6 +110,10 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     textAlign: 'center',
+  },
+  summaryContainer: {
+    marginTop: 15,
+    alignItems: 'center',
   }
 })
 
